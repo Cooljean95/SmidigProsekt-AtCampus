@@ -1,0 +1,100 @@
+@startuml
+'https://plantuml.com/object-diagram'
+
+entity Users{
+    * user_id: long AG ?
+    --
+    user_first_name: varchar(30) NN
+    user_last_name: varchar(40) NN
+    user_email: varchar(100) NN
+    user_password: varchar(255) NN
+    user_phone_number: varchar(15) NN
+    user_school: long FK NN
+    user_program: long FK NN
+    user_profile_image: varchar(255)
+    user_date_created: datetime NN
+}
+
+entity School{
+    * school_id: long AG ?
+    --
+    school_name: varchar(100) NN
+}
+
+entity Groups{
+    * group_id: Long AG ?
+    --
+    group_name: varchar(100) NN
+    group_description: text
+    group_image: varchar(255)
+    group_school: long FK NN
+    group_admin: long FK (users) NN
+    group_date_created: datetime NN
+}
+
+entity UserGroup{
+    * user_group_id: Long AG ?
+    --
+    user_id: Long FK NN
+    group_id: Long FK NN
+    is_favorite: boolean = false NN
+    date_joined: datetime NN
+}
+
+entity GroupRequests{
+    * group_request_id: Long AG ?
+    --
+    user_id: Long FK NN
+    group_id: Long FK NN
+    date_joined: datetime NN
+}
+
+entity Post{
+    * post_id: Long AG ?
+    --
+    post_title: varchar(70) NN
+    post_body: text NN
+    post_date_created: datetime NN
+    user_id Long FK
+    group_id Long FK
+}
+
+entity Comments{
+    * comment_id: Long AG ?
+    --
+    comment_body: text NN
+    comment_date: datetime NN
+    comment_post_id: long FK NN
+    comment_user_id: long FK NN
+}
+
+entity Programs{
+    * program_id: Long AG ?
+    --
+    program_name: varchar(80) NN
+}
+
+entity Roles{
+    * role_id: Long AG ?
+    --
+    role_name varchar(40) NN
+}
+
+entity User_roles{
+    user_id Long FK
+    role_id Long FK
+}
+
+Users }o--|| School
+Users }o--|| Programs
+Users}o--|| User_roles
+Users ||--o{ Groups
+Users ||--o{ UserGroup
+Groups ||--o{ UserGroup
+Users ||--o{ GroupRequests
+Groups ||--o{ GroupRequests
+Post }o--|| UserGroup
+Comments }o--|| Post
+Roles }o--|| User_roles
+
+@enduml

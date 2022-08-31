@@ -1,0 +1,15 @@
+/Server/.idea/
+/Server/.mvn/
+/Server/Server.iml
+/Server/mvnw.cmd
+/Server/mvnw
+/Server/HELP.md
+/Server/target/
+/Client/package-lock.json
+/.idea/AtCampus.iml
+/.idea/
+
+.DS_Store
+/.jpb/jpb-settings.xml
+
+/node_modules/

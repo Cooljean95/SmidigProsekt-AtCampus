@@ -1,0 +1,186 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+interface UserRepo{
+    findUserEntityByEmail(email: String): UserEntity
+    findUserEntitiesBySchoolEntity(schoolEntity: SchoolEntity): MutableList<UserEntity>
+    findUserEntitiesByProgramEntity(programEntity: ProgramEntity): MutableList<UserEntity>
+}
+
+interface GroupRepo{
+    findGroupEntitiesByName(name: String): MutableList<GroupEntity>
+    findGroupEntitiesBySchoolEntity(schoolEntity: SchoolEntity): MutableList<GroupEntity>
+}
+
+interface UserGroupRepo{
+    findUserGroupEntitiesByUserEntity(userEntity: UserEntity): MutableList<UserGroupEntity>
+    findUserGroupEntitiesByGroupEntity(groupEntity: GroupEntity): MutableList<UserGroupEntity>
+}
+
+interface ProgramRepo{
+    findProgramEntityByProgramName(name: String): ProgramEntity
+}
+
+interface SchoolRepo{
+    findSchoolEntityBySchoolName(name: String): SchoolEntity
+}
+
+interface PostRepo{
+    findPostEntityByGroupEntity(groupEntity: Group): MutableList<Post>
+}
+
+interface CommentRepo{
+    findCommentEntitiesByPostEntity(postEntity: PostEntity): MutableList<CommentEntity>
+}
+
+interface GroupRequestRepo{
+    No new methods implemented
+}
+
+interface RoleRepo{
+    getRoleEntityByName(name: String): RoleEntity
+}
+
+class UserService{
+    @Autowired userRepo: UserRepo
+    @Autowired groupRepo: GroupRepo
+    @Autowired userGroupRepo: UserGroupRepo
+    @Autowired schoolRepo: SchoolRepo
+    @Autowired programRepo: ProgramRepo
+    @Autowired roleRepo: RoleRepo
+    @Autowired passwordEncoder: PasswordEncoder
+    override loadUserByUsername(username: String): UserDetails
+    fun getUserByEmail(email: String): UserEntity
+    fun getAllUsers(): List<UserEntity>
+    getUsersByGroup(groupId: Long): MutableList<UserEntity>
+    getUserById(id: Long): UserEntity
+    updateUserById(id: Long, userDetail: UserDetail): UserEntit
+    registerUser(user: UserDetail): UserEntity
+}
+
+class GroupService{
+    @Autowired userRepo: UserRepo
+    @Autowired groupRepo: GroupRepo
+    @Autowired userGroupRepo: UserGroupRepo
+    @Autowired schoolRepo: SchoolRepo
+    @Autowired groupRequestRepo: GroupRequestRepo
+    getAllGroups(): MutableList<GroupEntity>
+    getGroupById(id: Long): GroupEntity
+    getGroupByName(name: String): MutableList<GroupEntity>
+    addUserToGroup(userId: Long, groupId: Long): GroupEntity
+    getGroupsByUserId(id: Long): MutableList<GroupEntity>
+    getGroupsBySchool(id: Long): MutableList<GroupEntity>
+    updateGroupById(id: Long, groupDetails: GroupDetails): GroupEntity
+    addGroup(groupDetails: GroupDetails): GroupEntity
+    addGroupRequestToGroup(userId: Long, groupId: Long): GroupRequestEntity
+}
+
+class SchoolService{
+    @Autowired schoolRepo: SchoolRepo
+    findSchoolByName(name: String): SchoolEntity
+    findSchoolById(id: Long): SchoolEntity
+    updateSchool(id: Long, schoolDetails: SchoolDetails): SchoolEntity
+    deleteSchool(id: Long): SchoolEntity
+}
+
+class ProgramService{
+    @Autowired programRepo: ProgramRepo
+    findProgramByName(name: String): ProgramEntity
+    findProgramById(id: Long): ProgramEntity
+    updateProgramInfo(id: Long, programDetails: ProgramDetails): ProgramEntity
+    deleteProgram(id: Long): ProgramEntity
+}
+
+class PostService{
+    @Autowired groupRepo: GroupRepo
+    @Autowired postRepo: PostRepo
+    @Autowired userRepo: UserRepo
+    findPostsByGroup(groupId: Long): MutableList<PostEntity>
+    findPostById(id: Long): PostEntity
+    deletePost(id: Long): PostEntity
+    addPost(postDetails: PostDetails): PostEntity
+    updatePostInfo(id: Long, updatePosts: PostDetails): PostEntity
+}
+
+class CommentService{
+    @Autowired commentRepo: CommentRepo
+    @Autowired postRepo: PostRepo
+    @Autowired userRepo: UserRepo
+    findCommentsByPost(postId: Long): MutableList<CommentEntity>
+    findCommentsById(id: Long): CommentEntity
+    deleteComment(id: Long): CommentEntity
+    updateComment(id Long, updateComment: CommentDetails): CommentEntity
+    addComment(commentDetails: CommentDetails): CommentEntity
+}
+
+object UserDetail{
+    id: Long
+    firstName: String
+    lastName: String
+    email: String
+    password: String
+    phoneNumber: String
+    school: Long
+    program: Long
+    userProfileImage: String,
+    dateCreated: LocalDate
+}
+
+object CommentDetails{
+        id: Long
+        body: String
+        post: Long
+        user: Long
+}
+
+object GroupDetails {
+    name: String
+    description: String
+    image: String
+    admin: Long,
+    school: Long
+}
+
+object PostDetails {
+    id: Long
+    title: String
+    body: String
+    user: Long
+    group: Long
+}
+
+object ProgramDetails{
+    programName: String
+}
+
+object SchoolDetails{
+    schoolName: String
+}
+
+UserService --> UserRepo
+UserService --> GroupRepo
+UserService --> UserGroupRepo
+UserService --> SchoolRepo
+UserService --> ProgramRepo
+UserService --> RoleRepo
+UserService --> UserDetail
+GroupService --> UserRepo
+GroupService --> GroupRepo
+GroupService --> UserGroupRepo
+GroupService --> SchoolRepo
+GroupService --> GroupRequestRepo
+GroupService --> GroupDetails
+ProgramService --> ProgramRepo
+ProgramService --> ProgramDetails
+SchoolService --> SchoolRepo
+SchoolService --> SchoolDetails
+CommentService --> PostRepo
+CommentService --> CommentRepo
+CommentService --> UserRepo
+CommentService --> CommentDetails
+PostService --> PostRepo
+PostService --> GroupRepo
+PostService --> UserRepo
+PostService --> PostDetails
+
+@enduml
